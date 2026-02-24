@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turella Web Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #2c1a0e;
+    --cream: #faf6f0;
+    --sand: #ede3d6;
+    --rust: #8B5E3C;
+    --rust-light: #c49a6c;
+    --muted: #7a6555;
+    --white: #fff9f4;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+  }
+  a:hover ~ .cursor-ring, button:hover ~ .cursor-ring { width: 60px; height: 60px; opacity: 0.3; }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    mix-blend-mode: normal;
+    background: rgba(250,246,240,0.92);
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 8rem 4rem 6rem;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero-title {
+    font-size: clamp(4rem, 7vw, 7.5rem);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--rust);
+  }
+  .hero-desc {
+    max-width: 380px;
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.7s forwards;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2rem;
+    background: var(--ink);
+    color: var(--cream);
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1.2rem 2.4rem;
+    transition: background 0.3s, gap 0.3s;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+    cursor: none;
+    width: fit-content;
+  }
+  .hero-cta:hover {
+    background: var(--rust);
+    gap: 2rem;
+  }
+  .hero-cta .arrow { font-size: 1rem; }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 1.5s 0.4s forwards;
+  }
+  .hero-right-inner {
+    position: absolute;
+    inset: 0;
+    background: #e4d8c8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-visual {
+    width: 70%;
+    height: 70%;
+    position: relative;
+  }
+  .hero-visual .shape1 {
+    position: absolute;
+    width: 280px; height: 380px;
+    border: 1.5px solid var(--rust);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-8deg);
+    animation: rotateSlow 20s linear infinite;
+  }
+  .hero-visual .shape2 {
+    position: absolute;
+    width: 200px; height: 200px;
+    background: var(--rust);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.15;
+  }
+  .hero-visual .shape3 {
+    position: absolute;
+    width: 120px; height: 160px;
+    background: var(--ink);
+    top: 50%; left: 50%;
+    transform: translate(-60%, -40%) rotate(12deg);
+    opacity: 0.08;
+  }
+  .hero-counter {
+    position: absolute;
+    bottom: 3rem;
+    right: 3rem;
+    text-align: right;
+    font-family: 'Syne', sans-serif;
+  }
+  .hero-counter .num {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--ink);
+    opacity: 0.07;
+  }
+  .hero-counter .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    animation: scrollPulse 2s 1.5s ease-in-out infinite;
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    padding: 2rem 0;
+    background: #1e0f06;
+    overflow: hidden;
+    position: relative;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--cream);
+    opacity: 0.4;
+    padding: 0 3rem;
+    flex-shrink: 0;
+  }
+  .marquee-dot {
+    color: var(--rust);
+    opacity: 1 !important;
+    font-style: normal;
+    margin: 0 -1rem;
+  }
+
+  /* SERVICES */
+  .services {
+    padding: 8rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 6rem;
+  }
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    padding-top: 0.5rem;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--sand);
+  }
+  .service-card {
+    background: var(--cream);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px; width: 0;
+    background: var(--rust);
+    transition: width 0.4s ease;
+  }
+  .service-card:hover { background: var(--white); }
+  .service-card:hover::before { width: 100%; }
+  .service-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--rust);
+    margin-bottom: 1.5rem;
+  }
+  .service-title {
+    font-size: 1.8rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .service-desc {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* PROCESS */
+  .process {
+    padding: 8rem 4rem;
+    background: #1e0f06;
+    color: var(--cream);
+  }
+  .process-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 6rem;
+  }
+  .process-title {
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 300;
+    line-height: 1;
+  }
+  .process-title em { font-style: italic; color: var(--rust-light); }
+  .process-subtitle {
+    max-width: 280px;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(245,240,232,0.5);
+    text-align: right;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(245,240,232,0.1);
+  }
+  .process-step {
+    background: var(--ink);
+    padding: 3rem 2.5rem;
+    position: relative;
+  }
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(245,240,232,0.06);
+    line-height: 1;
+    margin-bottom: 2rem;
+  }
+  .step-title {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    color: var(--cream);
+  }
+  .step-desc {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.45);
+  }
+
+  /* WORK */
+  .work {
+    padding: 8rem 4rem;
+  }
+  .work-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 4rem;
+  }
+  .work-title {
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 300;
+    line-height: 1;
+  }
+  .work-title em { font-style: italic; color: var(--rust); }
+  .work-link {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: none;
+  }
+  .work-link:hover { color: var(--rust); }
+  .work-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 340px 240px;
+    gap: 2px;
+    background: var(--sand);
+  }
+  .work-card {
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+  .work-card:nth-child(1) { grid-row: 1 / 3; }
+  .work-card-inner {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .work-card:hover .work-card-inner { transform: scale(1.04); }
+  .wc1 .work-card-inner { background: linear-gradient(135deg, #2a1f3d 0%, #1a2a3d 100%); }
+  .wc2 .work-card-inner { background: linear-gradient(135deg, #3d2a1f 0%, #c4622d 100%); }
+  .wc3 .work-card-inner { background: linear-gradient(135deg, #1f3d2a 0%, #2d5c3d 100%); }
+  .wc4 .work-card-inner { background: linear-gradient(135deg, #3d3d1f 0%, #5c5c2d 100%); }
+  .wc5 .work-card-inner { background: linear-gradient(135deg, #1f2d3d 0%, #2a3d5c 100%); }
+  .work-card-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.5));
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+    z-index: 2;
+  }
+  .work-card:hover .work-card-info { transform: translateY(0); }
+  .work-card-title {
+    color: var(--cream);
+    font-size: 1.3rem;
+    font-weight: 300;
+  }
+  .work-card-type {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+  }
+  /* Decorative grid lines in cards */
+  .work-card-inner::after {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* TESTIMONIAL */
+  .testimonial {
+    padding: 8rem 4rem;
+    background: var(--sand);
+    display: flex;
+    align-items: center;
+    gap: 8rem;
+    overflow: hidden;
+  }
+  .testimonial-quote {
+    font-size: clamp(1.8rem, 3vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.4;
+    font-style: italic;
+    flex: 1;
+  }
+  .testimonial-quote .open-quote {
+    font-size: 5rem;
+    line-height: 0;
+    vertical-align: -0.4em;
+    color: var(--rust);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .testimonial-meta {
+    flex-shrink: 0;
+    width: 220px;
+  }
+  .testimonial-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+  .testimonial-role {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 300;
+  }
+  .testimonial-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--rust);
+    margin: 1.5rem 0;
+  }
+  .testimonial-stars {
+    color: var(--rust);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* PRICING */
+  .pricing {
+    padding: 8rem 4rem;
+  }
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+  .pricing-title {
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .pricing-title em { font-style: italic; color: var(--rust); }
+  .pricing-subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--muted);
+  }
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--sand);
+  }
+  .pricing-card {
+    background: var(--cream);
+    padding: 3.5rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .pricing-card.featured {
+    background: #1e0f06;
+    color: var(--cream);
+  }
+  .pricing-card.featured .price-desc,
+  .pricing-card.featured .price-feature { color: rgba(245,240,232,0.5); }
+  .pricing-card.featured .price-feature::before { background: var(--rust-light); }
+  .price-tag {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 2rem;
+  }
+  .price-name {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+  .price-amount {
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .price-amount sup {
+    font-size: 1.5rem;
+    vertical-align: super;
+  }
+  .price-desc {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    min-height: 3em;
+  }
+  .price-divider {
+    height: 1px;
+    background: currentColor;
+    opacity: 0.1;
+    margin-bottom: 2rem;
+  }
+  .price-features {
+    list-style: none;
+    margin-bottom: 3rem;
+  }
+  .price-feature {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    position: relative;
+  }
+  .price-feature::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rust);
+    transform: translateY(-50%);
+  }
+  .price-btn {
+    display: block;
+    text-align: center;
+    padding: 1rem 2rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    transition: background 0.3s, color 0.3s;
+  }
+  .pricing-card:not(.featured) .price-btn {
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+  }
+  .pricing-card:not(.featured) .price-btn:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .pricing-card.featured .price-btn {
+    background: var(--rust);
+    color: var(--cream);
+  }
+  .pricing-card.featured .price-btn:hover {
+    background: var(--rust-light);
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    padding: 10rem 4rem;
+    background: linear-gradient(135deg, #5c3318 0%, #8B5E3C 60%, #c49a6c 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: 'TURELLA';
+    position: absolute;
+    font-family: 'Syne', sans-serif;
+    font-size: 18vw;
+    font-weight: 800;
+    color: rgba(0,0,0,0.08);
+    white-space: nowrap;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    letter-spacing: -0.02em;
+  }
+  .cta-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(250,248,244,0.6);
+    margin-bottom: 2rem;
+  }
+  .cta-title {
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--cream);
+    margin-bottom: 1rem;
+  }
+  .cta-title em { font-style: italic; }
+  .cta-email {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 300;
+    color: rgba(250,248,244,0.7);
+    margin-bottom: 4rem;
+    font-style: italic;
+    text-decoration: none;
+    display: block;
+    transition: color 0.3s;
+    cursor: none;
+  }
+  .cta-email:hover { color: var(--cream); }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--cream);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1.3rem 3rem;
+    transition: gap 0.3s, background 0.3s;
+    cursor: none;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-btn:hover { gap: 2rem; background: var(--white); }
+
+  /* FOOTER */
+  footer {
+    background: #1e0f06;
+    color: var(--cream);
+    padding: 4rem 4rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+  }
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cream);
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .footer-tagline {
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(245,240,232,0.4);
+  }
+  .footer-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .footer-nav a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: none;
+  }
+  .footer-nav a:hover { color: var(--cream); }
+  .footer-right {
+    text-align: right;
+  }
+  .footer-copy {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.25);
+    margin-top: 1rem;
+  }
+  .social-links {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+  .social-links a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: none;
+  }
+  .social-links a:hover { color: var(--rust-light); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes rotateSlow {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { width: 40px; opacity: 0.4; }
+    50% { width: 70px; opacity: 1; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.5rem 2rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { height: 40vh; }
+    .hero-left { padding: 6rem 2rem 4rem; }
+    .services { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 2rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .process { padding: 5rem 2rem; }
+    .process-header { flex-direction: column; gap: 2rem; }
+    .process-subtitle { text-align: left; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .work { padding: 5rem 2rem; }
+    .work-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .work-card:nth-child(1) { grid-row: auto; height: 300px; }
+    .work-card { height: 200px; }
+    .testimonial { flex-direction: column; gap: 3rem; padding: 5rem 2rem; }
+    .pricing { padding: 5rem 2rem; }
+    .pricing-cards { grid-template-columns: 1fr; }
+    .cta-section { padding: 7rem 2rem; }
+    footer { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 2rem; }
+    .footer-right { text-align: left; }
+    .social-links { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><img src="turella-logo.png" alt="Turella Web Design" style="height:38px; width:auto; display:block; filter: brightness(0.15) sepia(1) saturate(2) hue-rotate(5deg);"></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Azuriom · WHMCS · PHP</p>
+    <h1 class="hero-title">Built for<br><em>the web</em><br>you run.</h1>
+    <p class="hero-desc">Custom themes, storefronts, and PHP solutions for game servers and hosting providers. No page builders. No bloat. Just clean, purposeful code.</p>
+    <a href="#contact" class="hero-cta">Start a project <span class="arrow">→</span></a>
+    <div class="scroll-hint">
+      <span class="scroll-line"></span>
+      Scroll to explore
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-inner">
+      <div class="hero-visual">
+        <div class="shape2"></div>
+        <div class="shape3"></div>
+        <div class="shape1"></div>
+        <img src="turella-logo.png" alt="" style="position:absolute;width:72%;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.18;filter:sepia(1) saturate(2) brightness(0.4);pointer-events:none;">
+      </div>
+    </div>
+    <div class="hero-counter">
+      <div class="num">127</div>
+      <div class="label">Projects completed</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Azuriom Themes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">WHMCS Templates</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Plain PHP Development</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Custom Plugins</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Game Server Sites</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Hosting Storefronts</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Azuriom Themes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">WHMCS Templates</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Plain PHP Development</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Custom Plugins</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Game Server Sites</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Hosting Storefronts</span><span class="marquee-item marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div>
+    <p class="section-label">What we do</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <h3 class="service-title">Azuriom Themes</h3>
+      <p class="service-desc">Custom themes for your Azuriom game server site — built from scratch, pixel-perfect, and fully integrated with your plugins and modules.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <h3 class="service-title">WHMCS Templates</h3>
+      <p class="service-desc">Bespoke WHMCS storefronts that convert. Clean checkout flows, custom order forms, and client areas that actually reflect your brand.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <h3 class="service-title">Plain PHP Development</h3>
+      <p class="service-desc">When you need something built properly — no framework overhead, no dependencies you didn't ask for. Just solid, maintainable PHP.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">04</div>
+      <h3 class="service-title">Custom Plugins & Modules</h3>
+      <p class="service-desc">Azuriom plugins, WHMCS modules, or standalone PHP tools. If your stack needs a feature that doesn't exist yet, we'll build it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="process-header reveal">
+    <h2 class="process-title">How we<br><em>work together</em></h2>
+    <p class="process-subtitle">A clear, collaborative process — so you always know what's happening and why.</p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-num">01</div>
+      <h3 class="step-title">Brief</h3>
+      <p class="step-desc">You tell me what you need — platform, features, style references. The clearer the brief, the better the result.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <h3 class="step-title">Design</h3>
+      <p class="step-desc">I design the full layout and present it for your feedback before a single line of code is written.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <h3 class="step-title">Build</h3>
+      <p class="step-desc">Clean, hand-written code. Azuriom, WHMCS, or plain PHP — whichever fits your project, done right.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-num">04</div>
+      <h3 class="step-title">Deliver</h3>
+      <p class="step-desc">Files handed over, installed if needed, and explained. You own everything — no lock-in, no subscriptions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work" id="work">
+  <div class="work-header reveal">
+    <h2 class="work-title">Selected<br><em>work</em></h2>
+    <a href="#" class="work-link">View all projects →</a>
+  </div>
+  <div class="work-grid">
+    <div class="work-card wc1 reveal">
+      <div class="work-card-inner"></div>
+      <div class="work-card-info">
+        <div class="work-card-type">Azuriom · Custom Theme</div>
+        <div class="work-card-title">DarkRealms Network</div>
+      </div>
+    </div>
+    <div class="work-card wc2 reveal reveal-delay-1">
+      <div class="work-card-inner"></div>
+      <div class="work-card-info">
+        <div class="work-card-type">WHMCS · Storefront</div>
+        <div class="work-card-title">NexHost Solutions</div>
+      </div>
+    </div>
+    <div class="work-card wc3 reveal reveal-delay-2">
+      <div class="work-card-inner"></div>
+      <div class="work-card-info">
+        <div class="work-card-type">Plain PHP · Custom Tool</div>
+        <div class="work-card-title">PlayerStats Panel</div>
+      </div>
+    </div>
+    <div class="work-card wc4 reveal reveal-delay-1">
+      <div class="work-card-inner"></div>
+      <div class="work-card-info">
+        <div class="work-card-type">Azuriom · Plugin</div>
+        <div class="work-card-title">ShopPlus Module</div>
+      </div>
+    </div>
+    <div class="work-card wc5 reveal reveal-delay-2">
+      <div class="work-card-inner"></div>
+      <div class="work-card-info">
+        <div class="work-card-type">WHMCS · Order Flow</div>
+        <div class="work-card-title">VoidNodes Store</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial reveal">
+  <blockquote class="testimonial-quote">
+    <span class="open-quote">"</span>Handed over a brief on Monday, had a finished Azuriom theme by Thursday. Clean code, looked exactly like the mockup. Will be back for our WHMCS store next.
+  </blockquote>
+  <div class="testimonial-meta">
+    <div class="testimonial-name">Karim D.</div>
+    <div class="testimonial-role">Owner, NexHost Solutions</div>
+    <div class="testimonial-divider"></div>
+    <div class="testimonial-stars">★★★★★</div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-header reveal">
+    <p class="section-label" style="text-align:center; margin-bottom:1rem;">Investment</p>
+    <h2 class="pricing-title">Simple,<br><em>transparent</em> pricing</h2>
+    <p class="pricing-subtitle">No surprises. No hidden fees. Just great design.</p>
+  </div>
+  <div class="pricing-cards">
+    <div class="pricing-card reveal">
+      <div class="price-tag">Azuriom</div>
+      <div class="price-name">Theme</div>
+      <div class="price-amount"><sup>$</sup>80</div>
+      <div class="price-desc">A fully custom Azuriom theme built to your spec.</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="price-feature">Custom design from scratch</li>
+        <li class="price-feature">All standard Azuriom pages</li>
+        <li class="price-feature">Mobile-responsive</li>
+        <li class="price-feature">Plugin-compatible</li>
+        <li class="price-feature">Source files included</li>
+      </ul>
+      <a href="#contact" class="price-btn">Get started</a>
+    </div>
+    <div class="pricing-card featured reveal reveal-delay-1">
+      <div class="price-tag">Most Popular</div>
+      <div class="price-name">WHMCS</div>
+      <div class="price-amount"><sup>$</sup>120</div>
+      <div class="price-desc">A complete WHMCS storefront — cart, client area, and all.</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="price-feature">Full template design</li>
+        <li class="price-feature">Custom order forms</li>
+        <li class="price-feature">Client area styling</li>
+        <li class="price-feature">Email template set</li>
+        <li class="price-feature">Installation included</li>
+      </ul>
+      <a href="#contact" class="price-btn">Get started</a>
+    </div>
+    <div class="pricing-card reveal reveal-delay-2">
+      <div class="price-tag">PHP / Custom</div>
+      <div class="price-name">Bespoke</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">Plugins, tools, or full PHP builds with unique requirements.</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="price-feature">Azuriom plugins</li>
+        <li class="price-feature">WHMCS modules</li>
+        <li class="price-feature">Standalone PHP tools</li>
+        <li class="price-feature">API integrations</li>
+        <li class="price-feature">Priced per scope</li>
+      </ul>
+      <a href="#contact" class="price-btn">Let's talk</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <p class="cta-label">Ready when you are</p>
+  <h2 class="cta-title">Let's make<br><em>something great</em></h2>
+  <a href="/cdn-cgi/l/email-protection#8ee6ebe2e2e1cefdfafbeae7e1e8e1fce3efa0ede1" class="cta-email"><span class="__cf_email__" data-cfemail="7018151c1c1f3003040514191f161f021d115e131f">[email&#160;protected]</span></a>
+  <a href="/cdn-cgi/l/email-protection#e38b868f8f8ca3909796878a8c858c918e82cd808c" class="cta-btn">Start a conversation <span>→</span></a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <a href="#" class="footer-logo"><img src="turella-logo.png" alt="Turella Web Design" style="height:44px; width:auto; display:block; filter: brightness(10) saturate(0);"></a>
+    <p class="footer-tagline">Code that powers servers.</p>
+  </div>
+  <ul class="footer-nav">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-right">
+    <div class="social-links">
+      <a href="#">Instagram</a>
+      <a href="#">Dribbble</a>
+      <a href="#">LinkedIn</a>
+    </div>
+    <div class="footer-copy">© 2025 Turella. All rights reserved.</div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mouseX = -200, mouseY = -200, ringX = -200, ringY = -200;
+
+  cursor.style.opacity = '0';
+  ring.style.opacity = '0';
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+    cursor.style.opacity = '1';
+    ring.style.opacity = '0.6';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Hover effects for cursor
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+      ring.style.width = '60px'; ring.style.height = '60px'; ring.style.opacity = '0.2';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      ring.style.width = '36px'; ring.style.height = '36px'; ring.style.opacity = '0.6';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal')
