@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,6 +42,7 @@
 
   a{color:inherit;text-decoration:none;}
   ul{list-style:none;}
+  button{font:inherit;background:none;border:none;color:inherit;}
 
   /* ---------- background grid + scanlines ---------- */
   .bg-fixed{
@@ -96,9 +97,6 @@
     width:34px;height:34px;
     border:1px solid rgba(var(--accent-rgb),.5);
     transition:width .18s ease,height .18s ease,border-color .18s ease,background .18s ease,opacity .18s ease;
-  }
-  #cur-ring::before,#cur-ring::after{
-    content:'';position:absolute;background:rgba(var(--accent-rgb),.6);
   }
   #cur-ring.hover{
     width:56px;height:56px;
@@ -180,13 +178,6 @@
     text-transform:uppercase;color:var(--accent);
     margin-bottom:18px;
   }
-  .eyebrow .dot{
-    width:7px;height:7px;border-radius:50%;
-    background:var(--accent);
-    box-shadow:0 0 8px rgba(var(--accent-rgb),.9);
-    animation:pulse-led 2s ease-in-out infinite;
-  }
-  @keyframes pulse-led{0%,100%{opacity:1;}50%{opacity:.35;}}
 
   h1,h2,h3{font-family:var(--font-mono);font-weight:700;letter-spacing:-.01em;color:#f2f5f8;}
 
@@ -204,10 +195,12 @@
     display:flex;align-items:center;justify-content:space-between;
     padding:20px clamp(20px,5vw,64px);
     padding-left:calc(var(--sidebar-w) + clamp(20px,5vw,64px));
+    gap:20px;
   }
   @media (max-width:899px){ nav{padding-left:clamp(20px,5vw,64px);} }
-  .nav-logo{font-family:var(--font-mono);font-weight:700;font-size:14px;letter-spacing:.05em;}
+  .nav-logo{font-family:var(--font-mono);font-weight:700;font-size:14px;letter-spacing:.05em;flex-shrink:0;}
   .nav-logo span{color:var(--accent);}
+  .nav-right{display:flex;align-items:center;gap:28px;}
   .nav-links{display:flex;gap:28px;}
   .nav-links a{
     font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;
@@ -221,6 +214,20 @@
   .nav-links a:hover{color:var(--text);}
   .nav-links a:hover::after{width:100%;}
   @media (max-width:640px){ .nav-links{display:none;} }
+
+  .lang-switch{
+    display:flex;align-items:center;gap:2px;
+    border:1px solid var(--line-bright);
+    padding:3px;
+    flex-shrink:0;
+  }
+  .lang-btn{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;
+    padding:5px 9px;color:var(--text-dimmer);
+    transition:color .2s ease, background .2s ease;
+  }
+  .lang-btn:hover{color:var(--text);}
+  .lang-btn.active{color:#04120e;background:var(--accent);font-weight:600;}
 
   /* ---------- hero ---------- */
   .hero{
@@ -237,8 +244,6 @@
   .boot p{margin-bottom:4px;opacity:0;animation:boot-in .35s forwards;}
   .boot p .ok{color:var(--accent);}
   @keyframes boot-in{to{opacity:1;}}
-  .boot .caret{display:inline-block;width:7px;height:13px;background:var(--accent);vertical-align:-2px;animation:blink 1s step-end infinite;}
-  @keyframes blink{50%{opacity:0;}}
 
   .hero h1{
     font-size:clamp(2.4rem,7vw,5.2rem);
@@ -302,7 +307,8 @@
     padding-bottom:14px;margin-bottom:14px;border-bottom:var(--edge);
     color:var(--text-dim);letter-spacing:.1em;
   }
-  .status-panel .head .led{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px rgba(var(--accent-rgb),.9);}
+  .status-panel .head .led{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px rgba(var(--accent-rgb),.9);animation:pulse-led 2s ease-in-out infinite;}
+  @keyframes pulse-led{0%,100%{opacity:1;}50%{opacity:.35;}}
   .status-row{display:flex;justify-content:space-between;padding:7px 0;color:var(--text-dim);}
   .status-row b{color:var(--text);font-weight:500;text-align:right;}
   .status-row + .status-row{border-top:1px dashed var(--line);}
@@ -358,7 +364,7 @@
     display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
   }
   .node-status.exp{border-color:rgba(var(--amber-rgb),.4);color:var(--amber);}
-  .node-status i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;}
+  .node-status i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;flex-shrink:0;}
   .node-desc{color:var(--text-dim);max-width:640px;font-size:14.5px;margin-bottom:20px;}
   .node-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
   .node-links{display:flex;gap:14px;flex-wrap:wrap;}
@@ -381,7 +387,7 @@
     content:'';position:absolute;top:-40%;right:-10%;width:340px;height:340px;
     background:radial-gradient(circle, rgba(var(--accent-rgb),.1), transparent 70%);
   }
-  .term-line{font-family:var(--font-mono);font-size:13px;color:var(--text-dim);margin-bottom:6px;}
+  .term-line{font-family:var(--font-mono);font-size:13px;color:var(--text-dim);margin-bottom:6px;position:relative;}
   .term-line .p{color:var(--accent);}
   .contact-panel h2{font-size:clamp(1.8rem,4.4vw,3rem);margin:14px 0 20px;position:relative;}
   .contact-panel p{color:var(--text-dim);max-width:480px;margin-bottom:30px;position:relative;font-size:14.5px;}
@@ -416,21 +422,28 @@
   <div class="rack-track">
     <div class="rack-fill" id="rackFill"></div>
     <div class="rack-tick" style="top:0%" data-sec="hero"><span class="lbl">U01 · HERO</span></div>
-    <div class="rack-tick" style="top:25%" data-sec="about"><span class="lbl">U02 · ABOUT</span></div>
-    <div class="rack-tick" style="top:50%" data-sec="stack"><span class="lbl">U03 · STACK</span></div>
-    <div class="rack-tick" style="top:75%" data-sec="work"><span class="lbl">U04 · WORK</span></div>
-    <div class="rack-tick" style="top:100%" data-sec="contact"><span class="lbl">U05 · CONTACT</span></div>
+    <div class="rack-tick" style="top:25%" data-sec="about"><span class="lbl" data-i18n="about_num">U02 · ABOUT</span></div>
+    <div class="rack-tick" style="top:50%" data-sec="stack"><span class="lbl" data-i18n="stack_num">U03 · STACK</span></div>
+    <div class="rack-tick" style="top:75%" data-sec="work"><span class="lbl" data-i18n="work_num">U04 · WORK</span></div>
+    <div class="rack-tick" style="top:100%" data-sec="contact"><span class="lbl" data-i18n="contact_num">U05 · CONTACT</span></div>
   </div>
   <div class="rack-brand">TURELLA.SYS</div>
 </aside>
 
 <nav>
   <div class="nav-logo">TIAGO<span>_</span>TURELLA</div>
-  <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#stack">Stack</a>
-    <a href="#work">Work</a>
-    <a href="#contact">Contact</a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#about" data-i18n="nav_about">About</a>
+      <a href="#stack" data-i18n="nav_stack">Stack</a>
+      <a href="#work" data-i18n="nav_work">Work</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn" data-lang="pt">PT</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
   </div>
 </nav>
 
@@ -441,21 +454,21 @@
     <div class="boot" id="boot"></div>
 
     <h1 id="heroTitle" style="opacity:0">Tiago Turella<span class="accent">.</span></h1>
-    <p class="role" id="heroRole" style="opacity:0">Frontend Developer <span class="amber">//</span> keeping interfaces fast &amp; servers online</p>
-    <p class="sub" id="heroSub" style="opacity:0">Junior technical graduate from ETPR, building clean frontend UIs by day and running Minecraft server infrastructure by night. Portugal-based, always compiling something new.</p>
+    <p class="role" id="heroRole" data-i18n="hero_role" style="opacity:0">Frontend Developer <span class="amber">//</span> keeping interfaces fast &amp; servers online</p>
+    <p class="sub" id="heroSub" data-i18n="hero_sub" style="opacity:0">Junior technical graduate from ETPR, building clean frontend UIs by day and running Minecraft server infrastructure by night. Portugal-based, always compiling something new.</p>
     <div class="hero-cta" id="heroCta" style="opacity:0">
-      <a href="#work" class="btn btn-solid">View Work <span class="arrow">→</span></a>
-      <a href="#contact" class="btn">Contact <span class="arrow">→</span></a>
+      <a href="#work" class="btn btn-solid"><span data-i18n="hero_cta_work">View Work</span> <span class="arrow">→</span></a>
+      <a href="#contact" class="btn"><span data-i18n="hero_cta_contact">Contact</span> <span class="arrow">→</span></a>
     </div>
 
-    <div class="scroll-hint"><div class="line"></div>SCROLL</div>
+    <div class="scroll-hint"><div class="line"></div><span data-i18n="scroll_hint">SCROLL</span></div>
   </section>
 
   <!-- ABOUT -->
   <section class="sec wrap" id="about">
     <div class="sec-head reveal">
-      <span class="sec-num">U02 / ABOUT</span>
-      <h2 class="sec-title">System overview</h2>
+      <span class="sec-num" data-i18n="about_num">U02 / ABOUT</span>
+      <h2 class="sec-title" data-i18n="about_title">System overview</h2>
     </div>
 
     <div class="about-grid">
@@ -469,15 +482,15 @@
       </div>
 
       <div class="about-body reveal d2">
-        <p>I'm a <strong>frontend developer</strong> from Portugal, currently building my skills while finishing a technical junior programme at <strong>ETPR</strong> (Escola Técnica e Profissional do Ribatejo). I care about interfaces that feel considered — clean UI, deliberate motion, nothing left to default.</p>
-        <p>Off the frontend, I run the infrastructure behind <strong>Craft and Helps</strong>, a Minecraft MMORPG community — from the game server itself to the Azuriom-powered web platform sitting on top of it. Rack management, reverse proxies and query optimization are second nature at this point.</p>
-        <p>Outside of code: I'm into <strong>16-bit pixel art</strong> and video editing, and I'm generally curious about whatever new technology crosses my feed.</p>
+        <p data-i18n="about_p1">I'm a <strong>frontend developer</strong> from Portugal, currently building my skills while finishing a technical junior programme at <strong>ETPR</strong> (Escola Técnica e Profissional do Ribatejo). I care about interfaces that feel considered — clean UI, deliberate motion, nothing left to default.</p>
+        <p data-i18n="about_p2">Off the frontend, I run the infrastructure behind <strong>Craft and Helps</strong>, a Minecraft MMORPG community — from the game server itself to the Azuriom-powered web platform sitting on top of it. Rack management, reverse proxies and query optimization are second nature at this point.</p>
+        <p data-i18n="about_p3">Outside of code: I'm into <strong>16-bit pixel art</strong> and video editing, and I'm generally curious about whatever new technology crosses my feed.</p>
         <div class="tag-row">
-          <span class="tag">FRONTEND UI</span>
-          <span class="tag">16-BIT DESIGN</span>
-          <span class="tag">VIDEO EDITING</span>
-          <span class="tag">SERVER OPS</span>
-          <span class="tag">MINECRAFT DEV</span>
+          <span class="tag" data-i18n="about_tag1">FRONTEND UI</span>
+          <span class="tag" data-i18n="about_tag2">16-BIT DESIGN</span>
+          <span class="tag" data-i18n="about_tag3">VIDEO EDITING</span>
+          <span class="tag" data-i18n="about_tag4">SERVER OPS</span>
+          <span class="tag" data-i18n="about_tag5">MINECRAFT DEV</span>
         </div>
       </div>
     </div>
@@ -486,34 +499,34 @@
   <!-- STACK -->
   <section class="sec wrap" id="stack">
     <div class="sec-head reveal">
-      <span class="sec-num">U03 / STACK</span>
-      <h2 class="sec-title">Installed modules</h2>
+      <span class="sec-num" data-i18n="stack_num">U03 / STACK</span>
+      <h2 class="sec-title" data-i18n="stack_title">Installed modules</h2>
     </div>
 
     <div class="stack-grid" id="stackGrid">
-      <div class="stack-card reveal" style="--w:88%"><div class="stack-top"><span class="stack-id">MOD.01</span><span class="stack-led"></span></div><div class="stack-name">JavaScript</div><div class="stack-desc">Core scripting &amp; interactivity</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal" style="--w:88%"><div class="stack-top"><span class="stack-id">MOD.01</span><span class="stack-led"></span></div><div class="stack-name">JavaScript</div><div class="stack-desc" data-i18n="stack_desc1">Core scripting &amp; interactivity</div><div class="stack-bar"><i></i></div></div>
 
-      <div class="stack-card reveal d1" style="--w:78%"><div class="stack-top"><span class="stack-id">MOD.02</span><span class="stack-led"></span></div><div class="stack-name">TypeScript</div><div class="stack-desc">Typed builds &amp; tooling</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal d1" style="--w:78%"><div class="stack-top"><span class="stack-id">MOD.02</span><span class="stack-led"></span></div><div class="stack-name">TypeScript</div><div class="stack-desc" data-i18n="stack_desc2">Typed builds &amp; tooling</div><div class="stack-bar"><i></i></div></div>
 
-      <div class="stack-card reveal d2" style="--w:82%"><div class="stack-top"><span class="stack-id">MOD.03</span><span class="stack-led"></span></div><div class="stack-name">PHP</div><div class="stack-desc">Azuriom CMS &amp; backend services</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal d2" style="--w:82%"><div class="stack-top"><span class="stack-id">MOD.03</span><span class="stack-led"></span></div><div class="stack-name">PHP</div><div class="stack-desc" data-i18n="stack_desc3">Azuriom CMS &amp; backend services</div><div class="stack-bar"><i></i></div></div>
 
-      <div class="stack-card reveal d3" style="--w:74%"><div class="stack-top"><span class="stack-id">MOD.04</span><span class="stack-led"></span></div><div class="stack-name">Java</div><div class="stack-desc">Minecraft server plugins</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal d3" style="--w:74%"><div class="stack-top"><span class="stack-id">MOD.04</span><span class="stack-led"></span></div><div class="stack-name">Java</div><div class="stack-desc" data-i18n="stack_desc4">Minecraft server plugins</div><div class="stack-bar"><i></i></div></div>
 
-      <div class="stack-card reveal" style="--w:66%"><div class="stack-top"><span class="stack-id">MOD.05</span><span class="stack-led"></span></div><div class="stack-name">C#</div><div class="stack-desc">Tools &amp; custom utilities</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal" style="--w:66%"><div class="stack-top"><span class="stack-id">MOD.05</span><span class="stack-led"></span></div><div class="stack-name">C#</div><div class="stack-desc" data-i18n="stack_desc5">Tools &amp; custom utilities</div><div class="stack-bar"><i></i></div></div>
 
-      <div class="stack-card reveal d1" style="--w:60%"><div class="stack-top"><span class="stack-id">MOD.06</span><span class="stack-led"></span></div><div class="stack-name">Lua</div><div class="stack-desc">Scripting &amp; automation</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal d1" style="--w:60%"><div class="stack-top"><span class="stack-id">MOD.06</span><span class="stack-led"></span></div><div class="stack-name">Lua</div><div class="stack-desc" data-i18n="stack_desc6">Scripting &amp; automation</div><div class="stack-bar"><i></i></div></div>
 
-      <div class="stack-card reveal d2" style="--w:52%"><div class="stack-top"><span class="stack-id">MOD.07</span><span class="stack-led"></span></div><div class="stack-name">VB</div><div class="stack-desc">Legacy tooling</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal d2" style="--w:52%"><div class="stack-top"><span class="stack-id">MOD.07</span><span class="stack-led"></span></div><div class="stack-name">VB</div><div class="stack-desc" data-i18n="stack_desc7">Legacy tooling</div><div class="stack-bar"><i></i></div></div>
 
-      <div class="stack-card reveal d3" style="--w:80%"><div class="stack-top"><span class="stack-id">MOD.08</span><span class="stack-led"></span></div><div class="stack-name">CSS</div><div class="stack-desc">Interface styling &amp; motion</div><div class="stack-bar"><i></i></div></div>
+      <div class="stack-card reveal d3" style="--w:80%"><div class="stack-top"><span class="stack-id">MOD.08</span><span class="stack-led"></span></div><div class="stack-name">CSS</div><div class="stack-desc" data-i18n="stack_desc8">Interface styling &amp; motion</div><div class="stack-bar"><i></i></div></div>
     </div>
   </section>
 
   <!-- WORK -->
   <section class="sec wrap" id="work">
     <div class="sec-head reveal">
-      <span class="sec-num">U04 / WORK</span>
-      <h2 class="sec-title">Running nodes</h2>
+      <span class="sec-num" data-i18n="work_num">U04 / WORK</span>
+      <h2 class="sec-title" data-i18n="work_title">Running nodes</h2>
     </div>
 
     <div class="node-card reveal">
@@ -522,9 +535,9 @@
           <div class="node-id">NODE // 01</div>
           <h3 class="node-title">Craft and Helps</h3>
         </div>
-        <span class="node-status"><i></i>ACTIVE</span>
+        <span class="node-status"><i></i><span data-i18n="status_active">ACTIVE</span></span>
       </div>
-      <p class="node-desc">A Minecraft MMORPG server community I built and operate end-to-end — game server infrastructure and the Azuriom-powered web platform sitting on top of it. Pterodactyl-managed nodes behind Cloudflare and nginx, with a MariaDB backend keeping everything in sync.</p>
+      <p class="node-desc" data-i18n="node1_desc">A Minecraft MMORPG server community I built and operate end-to-end — game server infrastructure and the Azuriom-powered web platform sitting on top of it. Pterodactyl-managed nodes behind Cloudflare and nginx, with a MariaDB backend keeping everything in sync.</p>
       <div class="node-tags">
         <span class="tag">Minecraft</span><span class="tag">Azuriom CMS</span><span class="tag">PHP</span><span class="tag">MariaDB</span><span class="tag">Pterodactyl</span><span class="tag">nginx</span>
       </div>
@@ -539,9 +552,9 @@
           <div class="node-id">NODE // 02</div>
           <h3 class="node-title">TurellaDev</h3>
         </div>
-        <span class="node-status"><i></i>ACTIVE</span>
+        <span class="node-status"><i></i><span data-i18n="status_active">ACTIVE</span></span>
       </div>
-      <p class="node-desc">My personal brand and dev playground — a cyberpunk-themed corner of the web where I ship frontend experiments, portfolio work, and whatever project is currently eating my free time.</p>
+      <p class="node-desc" data-i18n="node2_desc">My personal brand and dev playground — a cyberpunk-themed corner of the web where I ship frontend experiments, portfolio work, and whatever project is currently eating my free time.</p>
       <div class="node-tags">
         <span class="tag">Frontend</span><span class="tag">JavaScript</span><span class="tag">CSS</span><span class="tag">Design</span>
       </div>
@@ -557,9 +570,9 @@
           <div class="node-id">NODE // 03</div>
           <h3 class="node-title">BeamNG ECU Tuning Interface</h3>
         </div>
-        <span class="node-status exp"><i></i>EXPERIMENTAL</span>
+        <span class="node-status exp"><i></i><span data-i18n="status_experimental">EXPERIMENTAL</span></span>
       </div>
-      <p class="node-desc">A custom tuning interface concept for BeamNG, exploring how a technical, data-dense tool can still feel approachable — an ongoing side project bridging UI design and game modding.</p>
+      <p class="node-desc" data-i18n="node3_desc">A custom tuning interface concept for BeamNG, exploring how a technical, data-dense tool can still feel approachable — an ongoing side project bridging UI design and game modding.</p>
       <div class="node-tags">
         <span class="tag">Tooling</span><span class="tag">UI Design</span><span class="tag">Modding</span>
       </div>
@@ -569,15 +582,15 @@
   <!-- CONTACT -->
   <section class="sec wrap" id="contact">
     <div class="sec-head reveal">
-      <span class="sec-num">U05 / CONTACT</span>
-      <h2 class="sec-title">Open a connection</h2>
+      <span class="sec-num" data-i18n="contact_num">U05 / CONTACT</span>
+      <h2 class="sec-title" data-i18n="contact_title">Open a connection</h2>
     </div>
 
     <div class="contact-panel reveal">
       <div class="term-line"><span class="p">root@turelladev:~$</span> whoami</div>
-      <div class="term-line">tiago_turella — frontend developer, Portugal</div>
-      <h2>Let's build<br>something solid.</h2>
-      <p>Got a project, an idea, or just want to talk servers and frontend? My GitHub is the fastest way to reach me.</p>
+      <div class="term-line" data-i18n="contact_whoami_desc">tiago_turella — frontend developer, Portugal</div>
+      <h2 data-i18n="contact_heading">Let's build<br>something solid.</h2>
+      <p data-i18n="contact_p">Got a project, an idea, or just want to talk servers and frontend? My GitHub is the fastest way to reach me.</p>
       <a href="https://github.com/TurellaDev" target="_blank" rel="noopener" class="btn btn-solid">github.com/TurellaDev <span class="arrow">→</span></a>
     </div>
   </section>
@@ -585,7 +598,7 @@
 </main>
 
 <footer>
-  <span>© <span id="year"></span> Tiago Turella — all systems nominal</span>
+  <span>© <span id="year"></span> Tiago Turella — <span data-i18n="footer_status">all systems nominal</span></span>
   <a href="https://github.com/TurellaDev" target="_blank" rel="noopener">GitHub ↗</a>
 </footer>
 
@@ -593,17 +606,135 @@
 (function(){
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ================= I18N ================= */
+  var I18N = {
+    pt: {
+      nav_about:"Sobre", nav_stack:"Stack", nav_work:"Trabalho", nav_contact:"Contacto",
+      scroll_hint:"DESLIZAR",
+      boot:[
+        "a ligar a turelladev.node ...",
+        'a autenticar utilizador: tiago_turella <span class="ok">[OK]</span>',
+        'a montar interface frontend <span class="ok">[OK]</span>',
+        'estado: <span class="ok">ONLINE</span>'
+      ],
+      hero_role:'Frontend Developer <span class="amber">//</span> a manter interfaces rápidas e servidores online',
+      hero_sub:"Formação técnico-profissional de nível júnior pela ETPR, a construir interfaces frontend de dia e infraestrutura de servidores Minecraft de noite. Baseado em Portugal, sempre a compilar algo novo.",
+      hero_cta_work:"Ver Trabalho", hero_cta_contact:"Contacto",
+      about_num:"U02 / SOBRE", about_title:"Visão geral do sistema",
+      about_p1:'Sou <strong>frontend developer</strong> em Portugal, atualmente a desenvolver as minhas competências enquanto termino o curso técnico-profissional na <strong>ETPR</strong> (Escola Técnica e Profissional do Ribatejo). Dou valor a interfaces bem pensadas — UI cuidada, animação deliberada, nada deixado ao acaso.',
+      about_p2:'Fora do frontend, trabalho na infraestrutura do <strong>Craft and Helps</strong>, uma comunidade de Minecraft MMORPG — desde o servidor de jogo até à plataforma web construída sobre Azuriom. Gestão de racks, proxies reversos e otimização de queries fazem parte do meu dia a dia por lá.',
+      about_p3:'Fora do código: gosto de <strong>pixel art 16-bit</strong> e edição de vídeo, e sou geralmente curioso sobre qualquer tecnologia nova que apareça.',
+      about_tag1:"UI DE FRONTEND", about_tag2:"DESIGN 16-BIT", about_tag3:"EDIÇÃO DE VÍDEO", about_tag4:"OPERAÇÕES DE SERVIDOR", about_tag5:"DESENVOLVIMENTO MINECRAFT",
+      stack_num:"U03 / STACK", stack_title:"Módulos instalados",
+      stack_desc1:"Scripting principal e interatividade", stack_desc2:"Builds tipados e ferramentas", stack_desc3:"Azuriom CMS e serviços backend", stack_desc4:"Plugins de servidor Minecraft", stack_desc5:"Ferramentas e utilitários personalizados", stack_desc6:"Scripting e automação", stack_desc7:"Ferramentas legadas", stack_desc8:"Estilo de interface e animação",
+      work_num:"U04 / TRABALHO", work_title:"Nós em execução",
+      status_active:"ATIVO", status_experimental:"EXPERIMENTAL",
+      node1_desc:"Uma comunidade de Minecraft MMORPG onde trabalho atualmente — a contribuir para a infraestrutura do servidor de jogo e para a plataforma web em Azuriom construída sobre ela. Nós geridos por Pterodactyl atrás de Cloudflare e nginx, com uma base de dados MariaDB a manter tudo sincronizado.",
+      node2_desc:"A minha marca pessoal e espaço de experimentação — um canto cyberpunk da web onde publico experiências frontend, trabalho de portfólio e seja qual for o projeto que ocupa o meu tempo livre no momento.",
+      node3_desc:"Um conceito de interface de tuning para BeamNG, a explorar como uma ferramenta técnica e densa em dados ainda pode parecer acessível — um projeto paralelo em curso que junta design de UI e modding de jogos.",
+      contact_num:"U05 / CONTACTO", contact_title:"Abrir uma ligação",
+      contact_whoami_desc:"tiago_turella — frontend developer, Portugal",
+      contact_heading:"Vamos construir<br>algo sólido.",
+      contact_p:"Tens um projeto, uma ideia, ou só queres falar sobre servidores e frontend? O meu GitHub é a forma mais rápida de me contactares.",
+      footer_status:"todos os sistemas operacionais"
+    },
+    en: {
+      nav_about:"About", nav_stack:"Stack", nav_work:"Work", nav_contact:"Contact",
+      scroll_hint:"SCROLL",
+      boot:[
+        "connecting to turelladev.node ...",
+        'authenticating user: tiago_turella <span class="ok">[OK]</span>',
+        'mounting frontend interface <span class="ok">[OK]</span>',
+        'status: <span class="ok">ONLINE</span>'
+      ],
+      hero_role:'Frontend Developer <span class="amber">//</span> keeping interfaces fast &amp; servers online',
+      hero_sub:"Junior technical graduate from ETPR, building clean frontend UIs by day and running Minecraft server infrastructure by night. Portugal-based, always compiling something new.",
+      hero_cta_work:"View Work", hero_cta_contact:"Contact",
+      about_num:"U02 / ABOUT", about_title:"System overview",
+      about_p1:'I\'m a <strong>frontend developer</strong> from Portugal, currently building my skills while finishing a technical junior programme at <strong>ETPR</strong> (Escola Técnica e Profissional do Ribatejo). I care about interfaces that feel considered — clean UI, deliberate motion, nothing left to default.',
+      about_p2:'Off the frontend, I work on the infrastructure behind <strong>Craft and Helps</strong>, a Minecraft MMORPG community — from the game server itself to the Azuriom-powered web platform sitting on top of it. Rack management, reverse proxies and query optimization are part of my day-to-day there.',
+      about_p3:'Outside of code: I\'m into <strong>16-bit pixel art</strong> and video editing, and I\'m generally curious about whatever new technology crosses my feed.',
+      about_tag1:"FRONTEND UI", about_tag2:"16-BIT DESIGN", about_tag3:"VIDEO EDITING", about_tag4:"SERVER OPS", about_tag5:"MINECRAFT DEV",
+      stack_num:"U03 / STACK", stack_title:"Installed modules",
+      stack_desc1:"Core scripting &amp; interactivity", stack_desc2:"Typed builds &amp; tooling", stack_desc3:"Azuriom CMS &amp; backend services", stack_desc4:"Minecraft server plugins", stack_desc5:"Tools &amp; custom utilities", stack_desc6:"Scripting &amp; automation", stack_desc7:"Legacy tooling", stack_desc8:"Interface styling &amp; motion",
+      work_num:"U04 / WORK", work_title:"Running nodes",
+      status_active:"ACTIVE", status_experimental:"EXPERIMENTAL",
+      node1_desc:"A Minecraft MMORPG server community I'm currently working on — contributing across game server infrastructure and the Azuriom-powered web platform sitting on top of it. Pterodactyl-managed nodes behind Cloudflare and nginx, with a MariaDB backend keeping everything in sync.",
+      node2_desc:"My personal brand and dev playground — a cyberpunk-themed corner of the web where I ship frontend experiments, portfolio work, and whatever project is currently eating my free time.",
+      node3_desc:"A custom tuning interface concept for BeamNG, exploring how a technical, data-dense tool can still feel approachable — an ongoing side project bridging UI design and game modding.",
+      contact_num:"U05 / CONTACT", contact_title:"Open a connection",
+      contact_whoami_desc:"tiago_turella — frontend developer, Portugal",
+      contact_heading:"Let's build<br>something solid.",
+      contact_p:"Got a project, an idea, or just want to talk servers and frontend? My GitHub is the fastest way to reach me.",
+      footer_status:"all systems nominal"
+    },
+    es: {
+      nav_about:"Sobre", nav_stack:"Stack", nav_work:"Trabajo", nav_contact:"Contacto",
+      scroll_hint:"DESPLAZAR",
+      boot:[
+        "conectando a turelladev.node ...",
+        'autenticando usuario: tiago_turella <span class="ok">[OK]</span>',
+        'montando interfaz frontend <span class="ok">[OK]</span>',
+        'estado: <span class="ok">ONLINE</span>'
+      ],
+      hero_role:'Frontend Developer <span class="amber">//</span> manteniendo interfaces rápidas y servidores en línea',
+      hero_sub:"Graduado técnico junior por la ETPR, construyendo interfaces frontend de día y gestionando infraestructura de servidores Minecraft de noche. Con base en Portugal, siempre compilando algo nuevo.",
+      hero_cta_work:"Ver Trabajo", hero_cta_contact:"Contacto",
+      about_num:"U02 / SOBRE", about_title:"Visión general del sistema",
+      about_p1:'Soy <strong>desarrollador frontend</strong> en Portugal, actualmente desarrollando mis habilidades mientras termino un programa técnico junior en <strong>ETPR</strong> (Escola Técnica e Profissional do Ribatejo). Me importan las interfaces bien pensadas — UI cuidada, movimiento deliberado, nada dejado al valor por defecto.',
+      about_p2:'Fuera del frontend, trabajo en la infraestructura de <strong>Craft and Helps</strong>, una comunidad de Minecraft MMORPG — desde el propio servidor de juego hasta la plataforma web construida sobre Azuriom. La gestión de racks, los proxies inversos y la optimización de consultas forman parte de mi día a día allí.',
+      about_p3:'Fuera del código: me interesa el <strong>pixel art de 16 bits</strong> y la edición de vídeo, y en general tengo curiosidad por cualquier tecnología nueva que aparezca.',
+      about_tag1:"UI DE FRONTEND", about_tag2:"DISEÑO 16-BIT", about_tag3:"EDICIÓN DE VÍDEO", about_tag4:"OPERACIONES DE SERVIDOR", about_tag5:"DESARROLLO MINECRAFT",
+      stack_num:"U03 / STACK", stack_title:"Módulos instalados",
+      stack_desc1:"Scripting principal e interactividad", stack_desc2:"Builds tipados y herramientas", stack_desc3:"Azuriom CMS y servicios backend", stack_desc4:"Plugins de servidor Minecraft", stack_desc5:"Herramientas y utilidades personalizadas", stack_desc6:"Scripting y automatización", stack_desc7:"Herramientas heredadas", stack_desc8:"Estilo de interfaz y animación",
+      work_num:"U04 / TRABAJO", work_title:"Nodos en ejecución",
+      status_active:"ACTIVO", status_experimental:"EXPERIMENTAL",
+      node1_desc:"Una comunidad de Minecraft MMORPG en la que trabajo actualmente — contribuyendo a la infraestructura del servidor de juego y a la plataforma web en Azuriom construida sobre ella. Nodos gestionados con Pterodactyl detrás de Cloudflare y nginx, con una base de datos MariaDB manteniendo todo sincronizado.",
+      node2_desc:"Mi marca personal y espacio de experimentación — un rincón cyberpunk de la web donde publico experimentos frontend, trabajo de portafolio y cualquier proyecto que ocupe mi tiempo libre en cada momento.",
+      node3_desc:"Un concepto de interfaz de tuning para BeamNG, explorando cómo una herramienta técnica y densa en datos puede seguir siendo accesible — un proyecto paralelo en curso que combina diseño de UI y modding de videojuegos.",
+      contact_num:"U05 / CONTACTO", contact_title:"Abrir una conexión",
+      contact_whoami_desc:"tiago_turella — desarrollador frontend, Portugal",
+      contact_heading:"Construyamos<br>algo sólido.",
+      contact_p:"¿Tienes un proyecto, una idea, o solo quieres hablar de servidores y frontend? Mi GitHub es la forma más rápida de contactarme.",
+      footer_status:"todos los sistemas funcionando"
+    }
+  };
+
+  var currentLang = 'pt';
+  function detectLang(){
+    var nl = (navigator.language || 'pt').toLowerCase();
+    if(nl.indexOf('pt') === 0) return 'pt';
+    if(nl.indexOf('es') === 0) return 'es';
+    return 'en';
+  }
+
+  function applyLang(lang){
+    if(!I18N[lang]) lang = 'pt';
+    currentLang = lang;
+    var dict = I18N[lang];
+    document.documentElement.lang = lang === 'pt' ? 'pt-PT' : lang;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if(dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+    });
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      applyLang(btn.getAttribute('data-lang'));
+    });
+  });
+
+  applyLang(detectLang());
+
   /* ---- footer year ---- */
   document.getElementById('year').textContent = new Date().getFullYear();
 
   /* ---- boot sequence ---- */
   var bootEl = document.getElementById('boot');
-  var lines = [
-    'connecting to turelladev.node ...',
-    'authenticating user: tiago_turella <span class="ok">[OK]</span>',
-    'mounting frontend interface <span class="ok">[OK]</span>',
-    'status: <span class="ok">ONLINE</span>'
-  ];
   var revealIds = ['heroTitle','heroRole','heroSub','heroCta'];
 
   function showHero(){
@@ -624,6 +755,7 @@
   } else {
     var i = 0;
     function nextLine(){
+      var lines = I18N[currentLang].boot;
       if(i >= lines.length){
         setTimeout(function(){
           bootEl.style.transition = 'opacity .4s ease';
